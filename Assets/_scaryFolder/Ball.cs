@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using TMPro;
 using UnityEngine.SceneManagement;
 using System.Collections;
 
@@ -9,11 +10,16 @@ public class Ball : MonoBehaviour
     bool _isWin;
 
     [SerializeField] ParticleSystem _particles;
+
     [SerializeField] Button _rollBTN;
     [SerializeField] Button _upBTN;
     [SerializeField] Button _downBTN;
     [SerializeField] Button _quitBTN;
     [SerializeField] Button _karmaBTN;
+
+    [SerializeField] TextMeshProUGUI _titleTXT;
+    [SerializeField] TextMeshProUGUI _winTXT;
+    [SerializeField] TextMeshProUGUI _loseTXT;
 
     void Start()
     {
@@ -26,6 +32,9 @@ public class Ball : MonoBehaviour
         _quitBTN.onClick.AddListener(QutiGame);
         _upBTN.onClick.AddListener(() => MoveDaBall(1f));
         _downBTN.onClick.AddListener(() => MoveDaBall(-1f));
+
+        _winTXT.gameObject.SetActive(false);
+        _loseTXT.gameObject.SetActive(false);
     }
 
     void MakeMagicHapen()
@@ -34,6 +43,7 @@ public class Ball : MonoBehaviour
         _rollBTN.gameObject.SetActive(false);
         _upBTN.gameObject.SetActive(false);
         _downBTN.gameObject.SetActive(false);
+        _titleTXT.gameObject.SetActive(false);
     }
 
     private void OnTriggerEnter(Collider other)
@@ -41,6 +51,7 @@ public class Ball : MonoBehaviour
         _particles.gameObject.SetActive(true);
         _isWin = true;
         StartCoroutine(LevelRestart());
+        _winTXT.gameObject.SetActive(true);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -48,6 +59,7 @@ public class Ball : MonoBehaviour
         if(collision.gameObject.tag == "Finish" && !_isWin)
         {
             StartCoroutine(LevelRestart());
+            _loseTXT.gameObject.SetActive(true);
         }
     }
 
@@ -60,6 +72,7 @@ public class Ball : MonoBehaviour
     void MoveDaBall(float where)
     {
         transform.Translate(0f, where, 0f);
+        _titleTXT.gameObject.SetActive(false);
     }
 
     void QutiGame()
